@@ -3,11 +3,17 @@ package com.example.myapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.*;
 
 public class MyActivity extends Activity {
     private static int CAMERA_REQUEST_CODE = 1;
@@ -57,17 +63,46 @@ public class MyActivity extends Activity {
                     imageView.setImageBitmap(bitmap);
                 }
             }
-        }else if (requestCode == GALLERY_REQUEST_CODE) {
+        } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (data == null) {
                 return;
             } else {
-                Bundle extras = data.getExtras();
-                if (extras == null) {
-                    return;
-                } else {
-
-                }
+                Uri uri = data.getData();
+                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
+                //要对file类型的数据进行操作
+                uri = convertUri(uri);
             }
         }
+    }
+
+    private Uri convertUri(Uri uri) {
+        try {
+            InputStream inputStream = this.getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();//关闭inputStream
+            return saveOnSD(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Uri saveOnSD(Bitmap bitmap) {
+        File tmpDir = new File(Environment.getExternalStorageDirectory() + "/glf-myapp/");
+        if (!tmpDir.exists()) {
+            tmpDir.mkdirs();
+        }
+        File tmpFile = new File(tmpDir.getAbsolutePath() + "glf-tmp.png");
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(tmpFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 85, fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Uri.fromFile(tmpFile);
     }
 }
