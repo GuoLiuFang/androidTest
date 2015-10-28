@@ -68,9 +68,10 @@ public class MyActivity extends Activity {
                 return;
             } else {
                 Uri uri = data.getData();
-                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
                 //要对file类型的数据进行操作
                 uri = convertUri(uri);
+                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -90,11 +91,11 @@ public class MyActivity extends Activity {
     }
 
     private Uri saveOnSD(Bitmap bitmap) {
-        File tmpDir = new File(Environment.getExternalStorageDirectory() + "/glf-myapp/");
+        File tmpDir = new File(Environment.getExternalStorageDirectory() + File.separator + "GLF-myapp");
         if (!tmpDir.exists()) {
             tmpDir.mkdirs();
         }
-        File tmpFile = new File(tmpDir.getAbsolutePath() + "glf-tmp.png");
+        File tmpFile = new File(tmpDir.getAbsolutePath() + File.separator + "GLF-tmp.png");
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(tmpFile);
             bitmap.compress(Bitmap.CompressFormat.PNG, 85, fileOutputStream);
