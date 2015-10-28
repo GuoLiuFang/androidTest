@@ -18,6 +18,7 @@ import java.io.*;
 public class MyActivity extends Activity {
     private static int CAMERA_REQUEST_CODE = 1;
     private static int GALLERY_REQUEST_CODE = 4;
+    private static int IMAGE_CROP_CODE = 6;
 
     /**
      * Called when the activity is first created.
@@ -59,8 +60,9 @@ public class MyActivity extends Activity {
                     return;
                 } else {
                     Bitmap bitmap = extras.getParcelable("data");
-                    ImageView imageView = ((ImageView) findViewById(R.id.imageView));
-                    imageView.setImageBitmap(bitmap);
+                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
+//                    ImageView imageView = ((ImageView) findViewById(R.id.imageView));
+//                    imageView.setImageBitmap(bitmap);
                 }
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
@@ -71,9 +73,16 @@ public class MyActivity extends Activity {
 //                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
                 //要对file类型的数据进行操作
                 uri = convertUri(uri);
-                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
+                this.startImageEdit(uri);
             }
         }
+    }
+
+    private void startImageEdit(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        this.startActivityForResult(intent, IMAGE_CROP_CODE);
     }
 
     private Uri convertUri(Uri uri) {
