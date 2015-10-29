@@ -60,22 +60,36 @@ public class MyActivity extends Activity {
                     return;
                 } else {
                     Bitmap bitmap = extras.getParcelable("data");
-                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
-//                    ImageView imageView = ((ImageView) findViewById(R.id.imageView));
-//                    imageView.setImageBitmap(bitmap);
+//                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
+                    ImageView imageView = ((ImageView) findViewById(R.id.imageView));
+                    imageView.setImageBitmap(bitmap);
                 }
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (data == null) {
                 return;
             } else {
-                Uri uri = data.getData();
+                Bundle bundle = data.getExtras();
+//                Uri uri = data.getData();
 //                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
                 //要对file类型的数据进行操作
-                uri = convertUri(uri);
+//                uri = convertUri(uri);
 //                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
-                this.startImageEdit(uri);
+//                this.startImageEdit(uri);
+                Bitmap bitmap = bundle.getParcelable("data");
+//                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
+                ImageView imageView = ((ImageView) findViewById(R.id.imageView));
+                imageView.setImageBitmap(bitmap);
+
             }
+        } else if (requestCode == IMAGE_CROP_CODE) {
+            if (data == null) {
+                return;
+            }
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = bundle.getParcelable("data");//这句话很有深意
+            ImageView imageView = ((ImageView) findViewById(R.id.imageView));
+            imageView.setImageBitmap(bitmap);
         }
     }
 
