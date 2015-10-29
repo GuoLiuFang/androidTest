@@ -60,26 +60,26 @@ public class MyActivity extends Activity {
                     return;
                 } else {
                     Bitmap bitmap = extras.getParcelable("data");
-//                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
-                    ImageView imageView = ((ImageView) findViewById(R.id.imageView));
-                    imageView.setImageBitmap(bitmap);
+                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
+//                    ImageView imageView = ((ImageView) findViewById(R.id.imageView));
+//                    imageView.setImageBitmap(bitmap);
                 }
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (data == null) {
                 return;
             } else {
-                Bundle bundle = data.getExtras();
-//                Uri uri = data.getData();
+//                Bundle bundle = data.getExtras();
+                Uri uri = data.getData();
 //                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
                 //要对file类型的数据进行操作
-//                uri = convertUri(uri);
+                Uri fileUri = this.convertUri(uri);
 //                Toast.makeText(MyActivity.this, uri.toString(), Toast.LENGTH_LONG).show();
-//                this.startImageEdit(uri);
-                Bitmap bitmap = bundle.getParcelable("data");
+                this.startImageEdit(fileUri);
+//                Bitmap bitmap = bundle.getParcelable("data");
 //                    this.startImageEdit(this.convertUri(this.saveOnSD(bitmap)));
-                ImageView imageView = ((ImageView) findViewById(R.id.imageView));
-                imageView.setImageBitmap(bitmap);
+//                ImageView imageView = ((ImageView) findViewById(R.id.imageView));
+//                imageView.setImageBitmap(bitmap);
 
             }
         } else if (requestCode == IMAGE_CROP_CODE) {
@@ -96,6 +96,7 @@ public class MyActivity extends Activity {
     private void startImageEdit(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
+        intent.putExtra("return-data", true);
         this.startActivityForResult(intent, IMAGE_CROP_CODE);
     }
 
